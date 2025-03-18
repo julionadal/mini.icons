@@ -491,7 +491,7 @@ MiniIcons.getByName = function(category, name)
   end
 
   -- Get "get" implementation now to show informative message for bad category
-  local getter = H.get_impl[category]
+  local getter = H.get_impl_by_name[category]
   if getter == nil then H.error(vim.inspect(category) .. ' is not a supported category.') end
 
   -- Try cache first
@@ -2148,6 +2148,16 @@ H.get_impl = {
     local ft = H.filetype_match(name)
     if ft ~= nil then return MiniIcons.get('filetype', ft) end
   end,
+  filetype = function(name) return H.filetype_icons[name] end,
+  lsp = function(name) return H.lsp_icons[name] end,
+  os = function(name) return H.os_icons[name] end,
+}
+
+H.get_impl_by_name = {
+  default = function(name) H.error(vim.inspect(name) .. ' is not a supported category.') end,
+  directory = function(name) return H.directory_icons[name] end,
+  extension = function(name) return H.extension_icons[name] end,
+  file = function(name) return H.file_icons[basename] end,
   filetype = function(name) return H.filetype_icons[name] end,
   lsp = function(name) return H.lsp_icons[name] end,
   os = function(name) return H.os_icons[name] end,
