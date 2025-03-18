@@ -495,8 +495,8 @@ MiniIcons.getByName = function(category, name)
   if getter == nil then H.error(vim.inspect(category) .. ' is not a supported category.') end
 
   -- Try cache first
-  local cached = H.cache_get(category, name)
-  if cached ~= nil then return cached[1], cached[2], cached[3] == true end
+  --local cached = H.cache_get(category, name)
+  --if cached ~= nil then return cached[1], cached[2], cached[3] == true end
 
   -- Get icon. Assume `nil` value to mean "fall back to category default".
   local icon, hl = getter(name)
