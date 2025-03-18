@@ -485,6 +485,29 @@ MiniIcons.get = function(category, name)
   return H.cache_set(category, name, icon, hl)
 end
 
+MiniIcons.getByName = function(category, name)
+  if not (type(category) == 'string' and type(name) == 'string') then
+    H.error('Both `category` and `name` should be string.')
+  end
+
+  -- Get "get" implementation now to show informative message for bad category
+  local getter = H.get_impl[category]
+  if getter == nil then H.error(vim.inspect(category) .. ' is not a supported category.') end
+
+  -- Try cache first
+  local cached = H.cache_get(category, name)
+  if cached ~= nil then return cached[1], cached[2], cached[3] == true end
+
+  -- Get icon. Assume `nil` value to mean "fall back to category default".
+  local icon, hl = getter(name)
+  if type(icon) == 'table' then
+    icon, hl = H.style_icon(icon.glyph, name), icon.hl
+  end
+
+  -- Save to cache and return
+  return H.cache_set(category, name, icon, hl)
+end
+
 --- List explicitly supported icon names
 ---
 ---@param category string Category name supported by |MiniIcons.get()|.
